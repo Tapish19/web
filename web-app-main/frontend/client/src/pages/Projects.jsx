@@ -243,6 +243,27 @@ export default function Project() {
     return <p>Loading project...</p>;
   }
 
+  const statusSummary =
+    tasks.reduce(
+      (acc, task) => {
+        const status =
+          task.status || "todo";
+        acc[status] =
+          (acc[status] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
+  const nextDueTask =
+    [...tasks]
+      .filter((task) => task.dueDate)
+      .sort(
+        (a, b) =>
+          new Date(a.dueDate) -
+          new Date(b.dueDate)
+      )[0];
+
   return (
     <div
       style={{
@@ -262,6 +283,42 @@ export default function Project() {
         {project?.title ||
           "Project Tasks"}
       </h2>
+
+      <div
+        style={{
+          marginTop: "14px",
+          marginBottom: "20px",
+          padding: "14px 16px",
+          borderRadius: "10px",
+          border: "1px solid #ddd6fe",
+          background: "#f8f7ff",
+          color: "#4338ca",
+          fontSize: "14px",
+          lineHeight: "1.6",
+        }}
+      >
+        <div>
+          Total tasks: {tasks.length}
+        </div>
+        <div>
+          Status: To Do{" "}
+          {statusSummary.todo || 0},
+          In Progress{" "}
+          {statusSummary[
+            "in-progress"
+          ] || 0}
+          , Done{" "}
+          {statusSummary.done || 0}
+        </div>
+        <div>
+          Due:{" "}
+          {nextDueTask?.dueDate
+            ? new Date(
+                nextDueTask.dueDate
+              ).toLocaleDateString()
+            : "No due date"}
+        </div>
+      </div>
 
       {error && (
         <p
