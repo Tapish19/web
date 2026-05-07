@@ -74,7 +74,7 @@ export default function Dashboard() {
         await API.post(
           "/projects",
           {
-            name: title.trim(),
+            title: title.trim(),
           }
         );
 
