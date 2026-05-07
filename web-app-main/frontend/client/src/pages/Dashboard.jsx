@@ -18,6 +18,9 @@ export default function Dashboard() {
   const [creating, setCreating] =
     useState(false);
 
+  const [projectStats, setProjectStats] =
+    useState({});
+
   const [error, setError] =
     useState("");
 
@@ -37,6 +40,69 @@ export default function Dashboard() {
         await API.get("/projects");
 
       setProjects(res.data);
+
+      const statsEntries =
+        await Promise.all(
+          res.data.map(async (project) => {
+            const tasksRes =
+              await API.get(
+                `/tasks/project/${project._id}`
+              );
+
+            const totalTasks =
+              tasksRes.data.length;
+
+            const statusCount =
+              tasksRes.data.reduce(
+                (acc, task) => {
+                  const status =
+                    task.status ||
+                    "todo";
+                  acc[status] =
+                    (acc[status] || 0) +
+                    1;
+                  return acc;
+                },
+                {}
+              );
+
+            const today =
+              new Date();
+
+            today.setHours(
+              0,
+              0,
+              0,
+              0
+            );
+
+            const overdueTasks =
+              tasksRes.data.filter(
+                (task) =>
+                  task.dueDate &&
+                  new Date(
+                    task.dueDate
+                  ) < today &&
+                  task.status !==
+                    "done"
+              ).length;
+
+            return [
+              project._id,
+              {
+                totalTasks,
+                statusCount,
+                overdueTasks,
+              },
+            ];
+          })
+        );
+
+      setProjectStats(
+        Object.fromEntries(
+          statsEntries
+        )
+      );
 
     } catch (err) {
 
