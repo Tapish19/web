@@ -1,10 +1,7 @@
 import axios from "axios";
 
-const configuredBaseUrl = import.meta.env.VITE_API_URL;
-
-const baseURL = configuredBaseUrl
-  ? configuredBaseUrl.replace(/\/$/, "")
-  : "/api";
+const rawBaseUrl = import.meta.env.VITE_API_URL || "https://web-1s.onrender.com/api";
+const baseURL = rawBaseUrl.replace(/\/$/, "");
 
 const API = axios.create({
   baseURL,
@@ -27,11 +24,7 @@ export const getApiErrorMessage = (err, fallbackMessage) => {
   if (backendError) return backendError;
 
   if (networkIssue) {
-    const sameOriginHint = baseURL === "/api"
-      ? "If frontend/backend are on different domains, set VITE_API_URL to your backend /api URL."
-      : "Confirm this API URL is live and reachable from the browser.";
-
-    return `Cannot reach API at ${baseURL}. ${sameOriginHint}`;
+    return `Cannot reach API (${baseURL}). Check VITE_API_URL, backend URL, and CORS settings.`;
   }
 
   return err?.message || fallbackMessage;

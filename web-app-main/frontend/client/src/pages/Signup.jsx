@@ -56,7 +56,15 @@ export default function Signup() {
         },
       });
     } catch (err) {
-      setError(getApiErrorMessage(err, "Signup failed. Please try again."));
+      const backendMsg = err.response?.data?.msg;
+      const networkIssue = !err.response;
+
+      setError(
+        backendMsg ||
+          (networkIssue
+            ? "Cannot reach API. Check VITE_API_URL / backend URL and CORS settings."
+            : "Signup failed. Please try again.")
+      );
     } finally {
       setSubmitting(false);
     }
