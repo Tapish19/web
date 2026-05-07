@@ -382,41 +382,6 @@ export default function Dashboard() {
                 Task title: {p.title || "Untitled task"}
               </div>
 
-              <div
-                style={{
-                  marginTop: "10px",
-                  fontSize: "14px",
-                  color: "#4338ca",
-                  lineHeight: "1.5",
-                }}
-              >
-                <div>
-                  Total tasks:{" "}
-                  {projectStats[p._id]
-                    ?.totalTasks || 0}
-                </div>
-                <div>
-                  Status: To Do{" "}
-                  {projectStats[p._id]
-                    ?.statusCount
-                    ?.todo || 0}
-                  , In Progress{" "}
-                  {projectStats[p._id]
-                    ?.statusCount?.[
-                    "in-progress"
-                  ] || 0}
-                  , Done{" "}
-                  {projectStats[p._id]
-                    ?.statusCount
-                    ?.done || 0}
-                </div>
-                <div>
-                  Overdue:{" "}
-                  {projectStats[p._id]
-                    ?.overdueTasks || 0}
-                </div>
-              </div>
-
             </div>
 
           ))
