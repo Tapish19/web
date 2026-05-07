@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import API from "../services/api";
+import API, { getApiErrorMessage } from "../services/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -58,10 +58,7 @@ export default function Login() {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.msg ||
-          "Login failed. Please try again."
-      );
+      setError(getApiErrorMessage(err, "Login failed. Please try again."));
     } finally {
       setLoading(false);
     }

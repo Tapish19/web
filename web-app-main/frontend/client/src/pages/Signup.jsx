@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../services/api";
+import API, { getApiErrorMessage } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
@@ -56,10 +56,7 @@ export default function Signup() {
         },
       });
     } catch (err) {
-      setError(
-        err.response?.data?.msg ||
-          "Signup failed. Please try again."
-      );
+      setError(getApiErrorMessage(err, "Signup failed. Please try again."));
     } finally {
       setSubmitting(false);
     }

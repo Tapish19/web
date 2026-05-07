@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const configuredBaseUrl = import.meta.env.VITE_API_URL;
+
+const baseURL = configuredBaseUrl
+  ? configuredBaseUrl.replace(/\/$/, "")
+  : "/api";
+
 const API = axios.create({
-  baseURL: "https://web-1s.onrender.com/api",
+  baseURL,
 });
 
 API.interceptors.request.use((req) => {
@@ -11,5 +17,20 @@ API.interceptors.request.use((req) => {
   }
   return req;
 });
+
+export const getApiErrorMessage = (err, fallbackMessage) => {
+  const backendMsg = err?.response?.data?.msg;
+  const backendError = err?.response?.data?.error;
+  const networkIssue = !err?.response;
+
+  if (backendMsg) return backendMsg;
+  if (backendError) return backendError;
+
+  if (networkIssue) {
+    return `Cannot reach API (${baseURL}). Check VITE_API_URL, backend URL, and CORS settings.`;
+  }
+
+  return err?.message || fallbackMessage;
+};
 
 export default API;
