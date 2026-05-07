@@ -58,7 +58,15 @@ export default function Login() {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(getApiErrorMessage(err, "Login failed. Please try again."));
+      const backendMsg = err.response?.data?.msg;
+      const networkIssue = !err.response;
+
+      setError(
+        backendMsg ||
+          (networkIssue
+            ? "Cannot reach API. Check VITE_API_URL / backend URL and CORS settings."
+            : "Login failed. Please try again.")
+      );
     } finally {
       setLoading(false);
     }
