@@ -248,10 +248,17 @@ export default function Project() {
       style={{
         maxWidth: "900px",
         margin: "40px auto",
-        padding: "20px",
+        padding: "28px",
+        borderRadius: "18px",
+        background:
+          "linear-gradient(145deg, #f5f3ff 0%, #eef2ff 45%, #fdf2f8 100%)",
+        boxShadow:
+          "0 12px 35px rgba(76, 29, 149, 0.12)",
+        border:
+          "1px solid #ddd6fe",
       }}
     >
-      <h2>
+      <h2 style={{ color: "#312e81" }}>
         {project?.title ||
           "Project Tasks"}
       </h2>
@@ -272,12 +279,15 @@ export default function Project() {
       <div
         style={{
           marginBottom: "24px",
-          padding: "16px",
-          border: "1px solid #ccc",
-          borderRadius: "10px",
+          padding: "20px",
+          border: "1px solid #ddd6fe",
+          borderRadius: "12px",
+          background: "#ffffffcc",
+          boxShadow:
+            "0 8px 20px rgba(139, 92, 246, 0.08)",
         }}
       >
-        <h3>Team Members</h3>
+        <h3 style={{ color: "#4338ca" }}>Team Members</h3>
 
         <div
           style={{
@@ -307,12 +317,24 @@ export default function Project() {
             width: "100%",
             padding: "10px",
             marginBottom: "10px",
+            borderRadius: "8px",
+            border: "1px solid #cbd5e1",
           }}
         />
 
         <button
           onClick={addMember}
           disabled={addingMember}
+          style={{
+            padding: "10px 16px",
+            background: "#9333ea",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: addingMember
+              ? "not-allowed"
+              : "pointer",
+          }}
         >
           {addingMember
             ? "Adding..."
@@ -325,12 +347,15 @@ export default function Project() {
       <div
         style={{
           marginBottom: "24px",
-          padding: "16px",
-          border: "1px solid #ccc",
-          borderRadius: "10px",
+          padding: "20px",
+          border: "1px solid #ddd6fe",
+          borderRadius: "12px",
+          background: "#ffffffcc",
+          boxShadow:
+            "0 8px 20px rgba(139, 92, 246, 0.08)",
         }}
       >
-        <h3>Create Task</h3>
+        <h3 style={{ color: "#4338ca" }}>Create Task</h3>
 
         <input
           type="text"
@@ -343,6 +368,8 @@ export default function Project() {
             width: "100%",
             padding: "10px",
             marginBottom: "10px",
+            borderRadius: "8px",
+            border: "1px solid #cbd5e1",
           }}
         />
 
@@ -357,6 +384,8 @@ export default function Project() {
             width: "100%",
             padding: "10px",
             marginBottom: "10px",
+            borderRadius: "8px",
+            border: "1px solid #cbd5e1",
           }}
         >
           <option value="">
@@ -388,12 +417,24 @@ export default function Project() {
             width: "100%",
             padding: "10px",
             marginBottom: "10px",
+            borderRadius: "8px",
+            border: "1px solid #cbd5e1",
           }}
         />
 
         <button
           onClick={createTask}
           disabled={creating}
+          style={{
+            padding: "10px 16px",
+            background: "#9333ea",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: creating
+              ? "not-allowed"
+              : "pointer",
+          }}
         >
           {creating
             ? "Creating..."
@@ -412,10 +453,14 @@ export default function Project() {
               key={t._id}
               style={{
                 border:
-                  "1px solid #ccc",
-                borderRadius: "10px",
+                  "1px solid #ddd6fe",
+                borderRadius: "12px",
                 padding: "16px",
                 marginBottom: "16px",
+                background:
+                  "linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)",
+                boxShadow:
+                  "0 6px 18px rgba(79, 70, 229, 0.08)",
               }}
             >
               <div>
