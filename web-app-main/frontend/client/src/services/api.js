@@ -15,4 +15,19 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+export const getApiErrorMessage = (err, fallbackMessage) => {
+  const backendMsg = err?.response?.data?.msg;
+  const backendError = err?.response?.data?.error;
+  const networkIssue = !err?.response;
+
+  if (backendMsg) return backendMsg;
+  if (backendError) return backendError;
+
+  if (networkIssue) {
+    return `Cannot reach API (${baseURL}). Check VITE_API_URL, backend URL, and CORS settings.`;
+  }
+
+  return err?.message || fallbackMessage;
+};
+
 export default API;
