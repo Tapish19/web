@@ -281,7 +281,7 @@ export default function Dashboard() {
                   marginBottom: "10px",
                 }}
               >
-                {p.name}
+                {p.title || p.name}
               </h4>
 
               {p.description && (
@@ -296,8 +296,7 @@ export default function Dashboard() {
                   fontSize: "14px",
                 }}
               >
-                Members:{" "}
-                {p.members?.length || 0}
+                Task title: {p.title || "Untitled task"}
               </div>
 
             </div>
