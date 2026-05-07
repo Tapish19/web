@@ -18,6 +18,9 @@ export default function Dashboard() {
   const [creating, setCreating] =
     useState(false);
 
+  const [projectStats, setProjectStats] =
+    useState({});
+
   const [error, setError] =
     useState("");
 
@@ -37,6 +40,69 @@ export default function Dashboard() {
         await API.get("/projects");
 
       setProjects(res.data);
+
+      const statsEntries =
+        await Promise.all(
+          res.data.map(async (project) => {
+            const tasksRes =
+              await API.get(
+                `/tasks/project/${project._id}`
+              );
+
+            const totalTasks =
+              tasksRes.data.length;
+
+            const statusCount =
+              tasksRes.data.reduce(
+                (acc, task) => {
+                  const status =
+                    task.status ||
+                    "todo";
+                  acc[status] =
+                    (acc[status] || 0) +
+                    1;
+                  return acc;
+                },
+                {}
+              );
+
+            const today =
+              new Date();
+
+            today.setHours(
+              0,
+              0,
+              0,
+              0
+            );
+
+            const overdueTasks =
+              tasksRes.data.filter(
+                (task) =>
+                  task.dueDate &&
+                  new Date(
+                    task.dueDate
+                  ) < today &&
+                  task.status !==
+                    "done"
+              ).length;
+
+            return [
+              project._id,
+              {
+                totalTasks,
+                statusCount,
+                overdueTasks,
+              },
+            ];
+          })
+        );
+
+      setProjectStats(
+        Object.fromEntries(
+          statsEntries
+        )
+      );
 
     } catch (err) {
 
@@ -128,7 +194,14 @@ export default function Dashboard() {
       style={{
         maxWidth: "900px",
         margin: "40px auto",
-        padding: "20px",
+        padding: "28px",
+        borderRadius: "18px",
+        background:
+          "linear-gradient(145deg, #f5f3ff 0%, #eef2ff 45%, #fdf2f8 100%)",
+        boxShadow:
+          "0 12px 35px rgba(76, 29, 149, 0.12)",
+        border:
+          "1px solid #ddd6fe",
       }}
     >
 
@@ -144,7 +217,7 @@ export default function Dashboard() {
         }}
       >
 
-        <h2>Dashboard</h2>
+        <h2 style={{ color: "#312e81" }}>Dashboard</h2>
 
         <button
           onClick={logout}
@@ -184,15 +257,18 @@ export default function Dashboard() {
         style={{
           padding: "20px",
           border:
-            "1px solid #ccc",
+            "1px solid #ddd6fe",
           borderRadius: "12px",
           marginBottom: "30px",
+          background: "#ffffffcc",
+          boxShadow: "0 8px 20px rgba(139, 92, 246, 0.08)",
         }}
       >
 
         <h3
           style={{
             marginBottom: "16px",
+            color: "#4338ca",
           }}
         >
           Create Project
@@ -246,6 +322,7 @@ export default function Dashboard() {
         <h3
           style={{
             marginBottom: "16px",
+            color: "#4338ca",
           }}
         >
           Your Projects
@@ -253,7 +330,7 @@ export default function Dashboard() {
 
         {projects.length === 0 ? (
 
-          <p>No projects found.</p>
+          <p style={{ color: "#6b7280" }}>No projects found.</p>
 
         ) : (
 
@@ -268,20 +345,25 @@ export default function Dashboard() {
               }
               style={{
                 border:
-                  "1px solid #ccc",
+                  "1px solid #ddd6fe",
                 borderRadius: "12px",
                 padding: "18px",
                 marginBottom: "16px",
                 cursor: "pointer",
+                background:
+                  "linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%)",
+                boxShadow:
+                  "0 6px 18px rgba(79, 70, 229, 0.08)",
               }}
             >
 
               <h4
                 style={{
                   marginBottom: "10px",
+                  color: "#4c1d95",
                 }}
               >
-                {p.name}
+                {p.title || p.name}
               </h4>
 
               {p.description && (
@@ -294,10 +376,45 @@ export default function Dashboard() {
                 style={{
                   marginTop: "10px",
                   fontSize: "14px",
+                  color: "#6d28d9",
                 }}
               >
-                Members:{" "}
-                {p.members?.length || 0}
+                Task title: {p.title || "Untitled task"}
+              </div>
+
+              <div
+                style={{
+                  marginTop: "10px",
+                  fontSize: "14px",
+                  color: "#4338ca",
+                  lineHeight: "1.5",
+                }}
+              >
+                <div>
+                  Total tasks:{" "}
+                  {projectStats[p._id]
+                    ?.totalTasks || 0}
+                </div>
+                <div>
+                  Status: To Do{" "}
+                  {projectStats[p._id]
+                    ?.statusCount
+                    ?.todo || 0}
+                  , In Progress{" "}
+                  {projectStats[p._id]
+                    ?.statusCount?.[
+                    "in-progress"
+                  ] || 0}
+                  , Done{" "}
+                  {projectStats[p._id]
+                    ?.statusCount
+                    ?.done || 0}
+                </div>
+                <div>
+                  Overdue:{" "}
+                  {projectStats[p._id]
+                    ?.overdueTasks || 0}
+                </div>
               </div>
 
             </div>
