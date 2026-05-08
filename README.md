@@ -48,13 +48,6 @@ npm run dev
 
 The Vite dev server will print the local URL (commonly `http://localhost:5173`).
 
-
-For frontend API configuration, create `web-app-main/frontend/client/.env` with:
-
-```bash
-VITE_API_URL=http://localhost:5000/api
-```
-
 ## Available Scripts
 
 ### Backend (`web-app-main`)
